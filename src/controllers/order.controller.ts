@@ -4,10 +4,15 @@ import { Truck, Route, Order } from '../models'
 import { ITruck, IOrder } from "../interfaces";
 
 export const createRoute = async (req:Request , res:Response) => {
-    const {  } = req.body
+    const { type, description, truckId, routeId } = req.body
 
     try {
-       
+        await db.connect()
+        const truck:ITruck|null = await Truck.findOne(truckId);
+        
+        return res.json({
+            truck
+        })
 
     } catch (error) {
         return res.status(406).json({

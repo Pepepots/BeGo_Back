@@ -3,7 +3,7 @@ import { IOrder } from "../interfaces";
 
 
 const orderSchema = new Schema<IOrder>({
-    type: { type: String, enum: { values: ['Aero', 'Maritimo', 'Terrestre'], message: "Tipo no valido" } },
+    type: { type: String, enum: { values: ['Aereo', 'Maritimo', 'Terrestre'], message: "Tipo no valido" } },
     description: { type: String },
     route: {
         pickup: { type: String },

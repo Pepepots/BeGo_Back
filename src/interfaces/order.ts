@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
 
 export interface IOrder {
-    type: 'Aero' | 'Maritimo' | 'Terrestre';
+    type: 'Aereo' | 'Maritimo' | 'Terrestre';
     description: string;
     route: {
         pickup: string;
