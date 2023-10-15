@@ -1,26 +1,37 @@
 import { Request, Response } from "express";
 import { db } from '../database'
 import { Point } from '../models'
+import { IPoint } from "../interfaces";
 
 export const getById = async (req:Request , res:Response) => {
     const { id } = req.params
     try {
         await db.connect()
-        const point = await Point.findById(id);
+        const point:IPoint|null = await Point.findById(id);
         await db.disconnect()
-        res.json({ point });
+        return res.json({ point });
     } catch (error) {
-        res.json({ "message": "No hay punto con ese ID"})
+        return res.json({ "points": [] })
     }
 }
 
 export const getAll = async (req:Request , res:Response) => {
-    try {
-        await db.connect()
-        const point = await Point.find({})
-        await db.disconnect()
-        res.json({ point });
-    } catch (error) {
-        res.json({ "message": "No hay punto"})
-    }
+    
+    await db.connect()
+    const points:IPoint[] = await Point.find({})
+    await db.disconnect()
+    return res.json({ points });
+}
+
+export const getByName = async (req:Request , res:Response) => {
+    const { name } = req.query
+    console.log(name);
+
+    await db.connect()
+    const points:IPoint[] = await Point.find({ "location.name": name })
+    await db.disconnect()
+
+
+    return res.json({ points });
+
 }

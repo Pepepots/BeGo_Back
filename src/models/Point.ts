@@ -3,7 +3,7 @@ import { IPoint } from "../interfaces";
 
 
 const pointSchema = new Schema<IPoint>({
-    Location: {
+    location: {
         name: 'string',
         placeId: 'string'
     }

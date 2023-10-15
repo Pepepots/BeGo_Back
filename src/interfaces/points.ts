@@ -5,5 +5,5 @@ interface Location {
 
 export interface IPoint {
     _id: string;
-    Location: Location;
+    location: Location;
 }
