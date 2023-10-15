@@ -1,0 +1,1 @@
+export * as pointController from './point.controller'

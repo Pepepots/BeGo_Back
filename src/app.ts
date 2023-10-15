@@ -1,7 +1,10 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
+import { routesPoints } from './routes'
 
 const app:Express = express();
 
-app.use();
+app.use(express.json());
+
+app.use(routesPoints);
 
 export default app;

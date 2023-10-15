@@ -1,5 +1,8 @@
 import { Router } from "express";
+import { pointController} from '../controllers'
 
 const router = Router();
 
-router.get('/point',)
+router.get('/points', pointController.getAll)
+
+export default router
