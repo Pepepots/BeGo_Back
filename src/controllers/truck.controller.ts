@@ -16,7 +16,7 @@ export const getById = async (req:Request , res:Response) => {
 }
 
 export const getAll = async (req:Request , res:Response) => {
-        await db.connect()
+    await db.connect()
     const trucks:ITruck[] = await Truck.find({})
     await db.disconnect()
     return res.json({ trucks });
