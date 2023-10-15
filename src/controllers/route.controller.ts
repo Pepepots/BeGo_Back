@@ -18,13 +18,17 @@ export const createRoute = async (req:Request , res:Response) => {
     const idTo = To.location.placeId
     const locationTo = await maps.getCoordinates(idTo)
 
+    const kmInRoute = await maps.getKm(idFrom, idTo)
+
 
     return res.json({
         idFrom,
         locationFrom,
 
         idTo,
-        locationTo
+        locationTo,
+
+        kmInRoute
     })
 }
 
