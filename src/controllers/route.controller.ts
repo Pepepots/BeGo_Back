@@ -1,14 +1,30 @@
 import { Request, Response } from "express";
 import { db } from '../database'
-import { Route } from '../models'
-import { IRoute } from "../interfaces";
+import { Point, Route } from '../models'
+import { IPoint, IRoute } from "../interfaces";
+import { maps } from "../helpers";
 
 export const createRoute = async (req:Request , res:Response) => {
-    const { from, to } = req.body
+    const { from="", to="" } = req.body
+
+    await db.connect()
+    const [ From ]:IPoint[] = await Point.find({ "location.name" : from })
+    const [ To ]:IPoint[] = await Point.find({ "location.name" : to })
+    await db.disconnect()
     
+    const idFrom = From.location.placeId
+    const locationFrom = await maps.getCoordinates(idFrom)
+    
+    const idTo = To.location.placeId
+    const locationTo = await maps.getCoordinates(idTo)
+
+
     return res.json({
-        from,
-        to
+        idFrom,
+        locationFrom,
+
+        idTo,
+        locationTo
     })
 }
 
