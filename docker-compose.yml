@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo:7
+    env_file:
+      - .env.db
+    container_name: "BeGo"
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data/db
+volumes:
+  data:
