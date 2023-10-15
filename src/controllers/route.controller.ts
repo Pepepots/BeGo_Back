@@ -75,3 +75,16 @@ export const getById = async (req:Request , res:Response) => {
         return res.json({ "routes": [] })
     }
 }
+
+export const deleteById = async (req:Request , res:Response) => {
+    const { id } = req.params
+
+    try {
+        await db.connect()
+        await Route.findByIdAndDelete(id);
+        await db.disconnect()
+        return res.json({ "Mesagge": `La ruta con el ${id} se elimino` });
+    } catch (error) {
+        return res.json({ "message": "No se pudo eliminar" })
+    }
+}
