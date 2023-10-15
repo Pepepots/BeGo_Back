@@ -11,16 +11,17 @@ export const createRoute = async (req:Request , res:Response) => {
         await db.connect()
         const From:IPoint|null = await Point.findOne({ "location.name" : from })
         const To:IPoint|null = await Point.findOne({ "location.name" : to })
-        const RepiteRoute:IRoute|null = await Route.findOne({ from, to }).exec()
-        await db.disconnect()
+        const RepiteRoute:IRoute|null = await Route.findOne({ from, to })
 
         // Valida que existan los dos puntos
         if (!(From && To)){
+            await db.disconnect()
             throw "Parametros invalido en el body"
         }
 
         // Valida si ya existe una ruta
         if (RepiteRoute){
+            await db.disconnect()
             throw "Ya existe una ruta"
         }
 
@@ -32,17 +33,22 @@ export const createRoute = async (req:Request , res:Response) => {
     
         const kmInRoute = await maps.getKm(idFrom, idTo)
     
-    
-        return res.json({
-            idFrom,
-            locationFrom,
-    
-            idTo,
-            locationTo,
-    
-            kmInRoute
-        }) 
+        const newRoute = new Route({
+            from, 
+            to, 
+            coordinates:{
+                from: [ locationFrom.lat,locationFrom.lng ],
+                to: [ locationTo.lat, locationTo.lng ]
+            },
+            distance: Number(kmInRoute.value / 1000).toFixed(0)
+        })
         
+        await newRoute.save().catch( err => res.json({ "message": "Algo salio mal"})) 
+        
+        return res.json({
+            newRoute
+        })
+
     } catch (error) {
         return res.status(406).json({
             "mesage": error
