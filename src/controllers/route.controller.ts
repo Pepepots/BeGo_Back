@@ -57,9 +57,21 @@ export const createRoute = async (req:Request , res:Response) => {
 }
 
 export const getAll = async (req:Request , res:Response) => {
-    
     await db.connect()
     const points:IRoute[] = await Route.find({})
     await db.disconnect()
     return res.json({ points });
+}
+
+export const getById = async (req:Request , res:Response) => {
+    const { id } = req.params
+
+    try {
+        await db.connect()
+        const route:IRoute|null = await Route.findById(id);
+        await db.disconnect()
+        return res.json({ route });
+    } catch (error) {
+        return res.json({ "routes": [] })
+    }
 }
