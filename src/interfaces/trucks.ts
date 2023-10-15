@@ -5,5 +5,5 @@ export interface ITruck {
     year: number;
     color: string;
     transportWeight: number;
-    created_at: number;
+    created_at: Date;
 }
