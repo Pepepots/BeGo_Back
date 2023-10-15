@@ -58,9 +58,9 @@ export const createRoute = async (req:Request , res:Response) => {
 
 export const getAll = async (req:Request , res:Response) => {
     await db.connect()
-    const points:IRoute[] = await Route.find({})
+    const routes:IRoute[] = await Route.find({})
     await db.disconnect()
-    return res.json({ points });
+    return res.json({ routes });
 }
 
 export const getById = async (req:Request , res:Response) => {
@@ -86,5 +86,70 @@ export const deleteById = async (req:Request , res:Response) => {
         return res.json({ "Mesagge": `La ruta con el ${id} se elimino` });
     } catch (error) {
         return res.json({ "message": "No se pudo eliminar" })
+    }
+}
+
+export const updateRoute = async (req:Request , res:Response) => {
+    const { id, from, to } = req.body
+
+    try {
+        await db.connect()
+        const currentRoute:IRoute|null = await Route.findOne({ _id: id})
+        const From:IPoint|null = await Point.findOne({ "location.name" : from })
+        const To:IPoint|null = await Point.findOne({ "location.name" : to })
+        const RepiteRoute:IRoute|null = await Route.findOne({ from, to })
+
+
+        //Valida que exista una ruta a modificar
+        if (!currentRoute) {
+            await db.disconnect()
+            throw "No hay ruta con ese Id"
+        }
+
+        // Valida que existan los dos puntos
+        if (!(From && To)){
+            await db.disconnect()
+            throw "Parametros invalido en el body"
+        }
+
+        // Valida si ya existe una ruta
+        if (RepiteRoute){
+            await db.disconnect()
+            throw "Ya existe una ruta"
+        }
+
+        // Valida si esta asignada a orden
+        // .
+        // .
+
+
+        const idFrom = From.location.placeId
+        const locationFrom = await maps.getCoordinates(idFrom)
+        
+        const idTo = To.location.placeId
+        const locationTo = await maps.getCoordinates(idTo)
+    
+        const kmInRoute = await maps.getKm(idFrom, idTo)
+        const parceKM = Number(kmInRoute.value / 1000).toFixed(0)
+
+        currentRoute.from = from
+        currentRoute.to = to
+        currentRoute.coordinates = {
+            from: [ locationFrom.lat,locationFrom.lng ],
+            to: [ locationTo.lat, locationTo.lng ]
+        } 
+        
+        currentRoute.distance = Number(parceKM)
+
+        await db.disconnect()
+        
+        return res.json({
+            currentRoute
+        })
+
+    } catch (error) {
+        return res.status(406).json({
+            "mesage": error
+        })
     }
 }
