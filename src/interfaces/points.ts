@@ -3,7 +3,7 @@ interface Location {
     placeId: string;
 }
 
-export interface IPoint extends Document {
+export interface IPoint {
     _id: string;
     Location: Location;
 }
