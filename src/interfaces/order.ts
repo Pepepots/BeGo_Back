@@ -1,12 +1,13 @@
+import { Schema } from "mongoose";
 
 export interface IOrder {
     type: string;
     description: string;
     route: {
-        from: string;
-        to: string;
+        pickup: string;
+        dropoff: string;
     };
     status: 'En Progreso' | 'Completada' | 'Cancelada';
-    truckId: string;
-    routeId: string;
+    truckId: Schema.Types.ObjectId ;
+    routeId: Schema.Types.ObjectId ;
 }
