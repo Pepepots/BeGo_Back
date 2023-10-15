@@ -8,9 +8,9 @@ export const getById = async (req:Request , res:Response) => {
         await db.connect()
         const point = await Point.findById(id);
         await db.disconnect()
-        res.send(point);
+        res.json({ point });
     } catch (error) {
-        res.send({ "message": "No hay punto"})
+        res.json({ "message": "No hay punto con ese ID"})
     }
 }
 
@@ -19,8 +19,8 @@ export const getAll = async (req:Request , res:Response) => {
         await db.connect()
         const point = await Point.find({})
         await db.disconnect()
-        res.send(point);
+        res.json({ point });
     } catch (error) {
-        res.send({ "message": "No hay punto"})
+        res.json({ "message": "No hay punto"})
     }
 }
