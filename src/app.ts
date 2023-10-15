@@ -1,5 +1,5 @@
 import express, { Express } from 'express';
-import { routesPoints, routesTrucks } from './routes'
+import { routesPoints, routesTrucks,routesRoute } from './routes'
 
 const app:Express = express();
 
@@ -7,5 +7,6 @@ app.use(express.json());
 
 app.use(routesPoints);
 app.use(routesTrucks);
+app.use(routesRoute);
 
 export default app;
