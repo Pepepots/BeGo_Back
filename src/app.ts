@@ -5,7 +5,7 @@ const app:Express = express();
 
 app.use(express.json());
 
-app.use("/points",routesPoints);
-app.use("/trucks",routesTrucks);
+app.use(routesPoints);
+app.use(routesTrucks);
 
 export default app;

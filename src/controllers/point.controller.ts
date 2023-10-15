@@ -5,6 +5,7 @@ import { IPoint } from "../interfaces";
 
 export const getById = async (req:Request , res:Response) => {
     const { id } = req.params
+
     try {
         await db.connect()
         const point:IPoint|null = await Point.findById(id);
@@ -24,8 +25,7 @@ export const getAll = async (req:Request , res:Response) => {
 }
 
 export const getByName = async (req:Request , res:Response) => {
-    const { name } = req.query
-    console.log(name);
+    const { name } = req.params
 
     await db.connect()
     const points:IPoint[] = await Point.find({ "location.name": name })

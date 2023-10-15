@@ -3,8 +3,8 @@ import { pointController} from '../controllers'
 
 const router = Router();
 
-router.get('/', pointController.getAll)
-router.get('/name/ ', pointController.getByName)
-router.get('/:id', pointController.getById)
+router.get('/points', pointController.getAll)
+router.get('/points/id/:id', pointController.getById)
+router.get('/points/name/:name', pointController.getByName)
 
 export default router
