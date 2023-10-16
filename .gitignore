@@ -1,5 +1,8 @@
 /node_modules
+
+# Directorio Prod
 /dist
 
+# Variables de entorno
 .env
 .env.db
