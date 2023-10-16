@@ -108,12 +108,41 @@ export const deleteById = async (req: Request, res: Response) => {
 export const updateOrder = async (req: Request, res: Response) => {
 
     const { id } = req.params
-    const { from, to } = req.body
+    const { type, description, truckId, routeId, status } = req.body
 
     try {
         await db.connect()
+        const order:IOrder|null =  await Order.findById(id);
+        const truck: ITruck | null = await Truck.findById(truckId || order?.truckId);
+        const route: IRoute | null = await Route.findById(routeId || order?.routeId);
 
+        if (!order) {
+            await db.disconnect()
+            return res.json({ "message": "No hay orden con ese ID" })
+        }
+
+        if (order.status === "En Progreso") {
+            await db.disconnect()
+            return res.json({ "message": "No se puede eliminar una orden En Progreso" })
+        }
+
+        if (!(truck && route)) {
+            await db.disconnect()
+            throw "Falta rout o truck"
+        }
+
+        order.type = type || order.type
+        order.description  = description || order.description
+        order.route =  {
+                pickup: route.from,
+                dropoff: route.to
+            }
+        order.status = status || order.status
+        order.truckId = truck.id
+        order.routeId = route.id
+        await order.save()
         await db.disconnect()
+
 
 
 

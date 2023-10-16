@@ -1,6 +1,6 @@
-import { Schema } from "mongoose";
+import { Document, Schema } from "mongoose";
 
-export interface IOrder {
+export interface IOrder extends Document {
     type: 'Aereo' | 'Maritimo' | 'Terrestre';
     description: string;
     route: {
