@@ -90,7 +90,8 @@ export const deleteById = async (req:Request , res:Response) => {
 }
 
 export const updateRoute = async (req:Request , res:Response) => {
-    const { id, from, to } = req.body
+    const { id } = req.params
+    const { from, to } = req.body
 
     try {
         await db.connect()
