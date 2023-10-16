@@ -6,6 +6,7 @@ interface Coordinates {
 }
 
 export interface IRoute extends Document {
+    _id: string;
     from: string;
     to: string;
     coordinates: Coordinates;

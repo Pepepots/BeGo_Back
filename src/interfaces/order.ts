@@ -1,6 +1,7 @@
 import { Document, Schema } from "mongoose";
 
 export interface IOrder extends Document {
+    _id: string;
     type: 'Aereo' | 'Maritimo' | 'Terrestre';
     description: string;
     route: {

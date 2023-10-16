@@ -1,6 +1,7 @@
 import app from "./app";
+import 'dotenv/config'
 
 
-app.listen(5000,() => {
+app.listen(process.env.PORT,() => {
     console.log("Iniciamos en puerto 5000");
 });
