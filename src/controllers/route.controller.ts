@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { db } from '../database'
-import { Point, Route } from '../models'
-import { IPoint, IRoute } from "../interfaces";
+import { Point, Route, Order } from '../models'
+import { IPoint, IRoute, IOrder } from "../interfaces";
 import { maps } from "../helpers";
 
 export const createRoute = async (req:Request , res:Response) => {
@@ -82,9 +82,18 @@ export const deleteById = async (req:Request , res:Response) => {
     try {
         await db.connect()
         await Route.findByIdAndDelete(id);
+        const OrderInProgress:IOrder[]|null = await Order.find({ status: "En Progreso", routeId: id });
         await db.disconnect()
-        return res.json({ "Mesagge": `La ruta con el ${id} se elimino` });
+
+        // Valida si esta asignada a orden
+        if ( OrderInProgress.length > 0 ) {
+            await db.disconnect()
+            return res.json({ "message": "No se puede eliminar por que tienes una Orden En Progreso" })
+        }
+        await db.disconnect()
+        return res.json({ "mesagge": `La ruta con el ${id} se elimino` });
     } catch (error) {
+        await db.disconnect()
         return res.json({ "message": "No se pudo eliminar" })
     }
 }
@@ -99,6 +108,7 @@ export const updateRoute = async (req:Request , res:Response) => {
         const From:IPoint|null = await Point.findOne({ "location.name" : from })
         const To:IPoint|null = await Point.findOne({ "location.name" : to })
         const RepiteRoute:IRoute|null = await Route.findOne({ from, to })
+        const OrderInProgress:IOrder[]|null = await Order.find({ status: "En Progreso", routeId: id });
 
 
         //Valida que exista una ruta a modificar
@@ -120,9 +130,11 @@ export const updateRoute = async (req:Request , res:Response) => {
         }
 
         // Valida si esta asignada a orden
-        // .
-        // .
-
+        if ( OrderInProgress.length > 0 ) {
+            await db.disconnect()
+            throw "Esta ruta tiene una orden En Progreso"
+        }
+        
 
         const idFrom = From.location.placeId
         const locationFrom = await maps.getCoordinates(idFrom)
@@ -141,7 +153,7 @@ export const updateRoute = async (req:Request , res:Response) => {
         } 
         
         currentRoute.distance = Number(parceKM)
-
+        await currentRoute.save()
         await db.disconnect()
         
         return res.json({
