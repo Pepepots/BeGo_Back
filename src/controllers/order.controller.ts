@@ -153,3 +153,28 @@ export const updateOrder = async (req: Request, res: Response) => {
         })
     }
 }
+
+export const completeOrder = async (req:Request, res:Response) => {
+    const { id } = req.params
+
+    try {
+        await db.connect()
+        const order:IOrder|null =  await Order.findById(id);
+        await db.disconnect()
+        
+        if (!order) {
+            await db.disconnect()
+            return res.json({ "message": "No hay orden con ese ID" })
+        }
+
+        order.status = "Completada"
+        order.save()
+
+        return res.json({
+            order
+        })
+
+    }catch (err) {
+        return res.json({ "message": "No hay orden con ese ID" })
+    }
+}
