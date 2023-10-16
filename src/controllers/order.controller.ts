@@ -123,7 +123,7 @@ export const updateOrder = async (req: Request, res: Response) => {
 
         if (order.status === "En Progreso") {
             await db.disconnect()
-            return res.json({ "message": "No se puede eliminar una orden En Progreso" })
+            return res.json({ "message": "No se puede modificar una orden En Progreso" })
         }
 
         if (!(truck && route)) {
@@ -143,8 +143,9 @@ export const updateOrder = async (req: Request, res: Response) => {
         await order.save()
         await db.disconnect()
 
-
-
+        return res.json({ 
+            order
+        })
 
     } catch (error) {
         return res.status(406).json({
