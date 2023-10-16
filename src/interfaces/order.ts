@@ -7,7 +7,7 @@ export interface IOrder {
         pickup: string;
         dropoff: string;
     };
-    status: 'En Progreso' | 'Completada' | 'Cancelada';
+    status: 'Creada' |'En Progreso' | 'Completada';
     truckId: Schema.Types.ObjectId ;
     routeId: Schema.Types.ObjectId ;
 }

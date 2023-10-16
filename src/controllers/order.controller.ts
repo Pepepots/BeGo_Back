@@ -6,14 +6,14 @@ import { ITruck, IOrder, IRoute } from "../interfaces";
 export const createOrder = async (req: Request, res: Response) => {
     const { type, description, truckId, routeId } = req.body
 
-    
+
     try {
         await db.connect()
         const truck: ITruck | null = await Truck.findById(truckId);
         const route: IRoute | null = await Route.findById(routeId);
 
         // Valida que existan un truck y una route
-        if( !(truck && route)){
+        if (!(truck && route)) {
             await db.disconnect()
             throw "Falta rout o truck"
         }
@@ -23,14 +23,14 @@ export const createOrder = async (req: Request, res: Response) => {
             description,
             route: {
                 pickup: route.from,
-                dropoff: route.to 
+                dropoff: route.to
             },
-            status: "En Progreso",
+            status: "Completada",
             truckId,
             routeId
 
         })
-       
+
         try {
             await newOrder.save()
             await db.disconnect()
@@ -38,7 +38,7 @@ export const createOrder = async (req: Request, res: Response) => {
             await db.disconnect()
             return res.json({ "message": error })
         }
-        
+
         return res.json({
             newOrder
         })
@@ -73,19 +73,42 @@ export const getById = async (req: Request, res: Response) => {
 
 export const deleteById = async (req: Request, res: Response) => {
     const { id } = req.params
-
     try {
         await db.connect()
-        await Order.findByIdAndDelete(id);
+        const order:IOrder|null =  await Order.findById(id);
         await db.disconnect()
-        return res.json({ "Mesagge": `La orden con el ${id} se elimino` });
+
+        if (!order) {
+            await db.disconnect()
+            return res.json({ "message": "No hay orden con ese ID" })
+        }
+
+        if (order.status === "En Progreso") {
+            await db.disconnect()
+            return res.json({ "message": "No se puede eliminar una orden En Progreso" })
+        }
+
+        try {
+            await db.connect()
+            await Order.findByIdAndDelete(id);
+            await db.disconnect()
+            return res.json({ "Mesagge": `La orden con el ${id} se elimino` });
+        } catch (error) {
+            await db.disconnect()
+
+            return res.json({ "message": "No se pudo eliminar" })
+        }
     } catch (error) {
-        return res.json({ "message": "No se pudo eliminar" })
+        await db.disconnect()
+        return res.json({ "message": "No hay orden con ese ID" })
     }
+
 }
 
 export const updateOrder = async (req: Request, res: Response) => {
-    const { id, from, to } = req.body
+
+    const { id } = req.params
+    const { from, to } = req.body
 
     try {
         await db.connect()

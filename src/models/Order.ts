@@ -9,7 +9,7 @@ const orderSchema = new Schema<IOrder>({
         pickup: { type: String },
         dropoff: { type: String },
     },
-    status: { type: String,  enum: { values: [ 'En Progreso', 'Completada', 'Cancelada' ], message: "Status no valido"}},
+    status: { type: String,  enum: { values: [ 'En Progreso', 'Completada', 'Creada' ], message: "Status no valido"}},
     truckId: { type: Schema.Types.ObjectId, ref: "Truck" },
     routeId: { type: Schema.Types.ObjectId, ref: "Route" }
 });
