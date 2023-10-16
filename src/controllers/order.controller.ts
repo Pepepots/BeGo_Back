@@ -25,7 +25,7 @@ export const createOrder = async (req: Request, res: Response) => {
                 pickup: route.from,
                 dropoff: route.to
             },
-            status: "Completada",
+            status: "Creada",
             truckId,
             routeId
 
