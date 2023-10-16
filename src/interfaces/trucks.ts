@@ -1,8 +1,8 @@
 import { Document } from "mongoose";
 
-export interface ITruck extends Document {
+export interface ITruck extends Document{
     _id: string;
-    model: string;
+    modelo: string;
     make: string;
     year: number;
     color: string;

@@ -3,7 +3,7 @@ import { ITruck } from "../interfaces";
 
 
 const truckSchema = new Schema<ITruck>({
-    model: { type: String },
+    modelo: { type: String },
     make: { type: String },
     year: { type: Number },
     color: { type: String },
